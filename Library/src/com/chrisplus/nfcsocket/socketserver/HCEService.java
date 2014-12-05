@@ -1,5 +1,6 @@
 package com.chrisplus.nfcsocket.socketserver;
 
+import android.content.Intent;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
 
@@ -26,5 +27,12 @@ public class HCEService extends HostApduService {
 				&& apdu[1] == (byte) 0xa4;
 	}
 
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		super.onStartCommand(intent, flags, startId);
+		return START_STICKY;
+	}
+	
+	
 
 }
