@@ -7,8 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.chrisplus.nfcsocket.socketserver.HCEService;
-import com.chrisplus.nfcsocket.socketserver.HCEService.HCEServiceListener;
+import com.chrisplus.nfcsocket.HCEService.HCEServiceListener;
 
 /**
  * This class implements the NFC socket server;
@@ -59,7 +58,8 @@ public class NFCSocketServer implements HCEServiceListener {
 		}
 	}
 
-	public void listen() {
+	public void listen(NFCSocketServerListener lst) {
+		setListener(lst);
 		Log.d(TAG, "bind to service");
 		context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 		context.startService(intent);
@@ -74,7 +74,7 @@ public class NFCSocketServer implements HCEServiceListener {
 
 	public interface NFCSocketServerListener {
 
-		public void onAccept(byte[] message);
+		public byte[] onAccept(byte[] message);
 
 	}
 
@@ -117,7 +117,11 @@ public class NFCSocketServer implements HCEServiceListener {
 	@Override
 	public byte[] onAcceptMessage(byte[] message) {
 		Log.d(TAG, "listen: on accept message");
-		return null;
+		if (listener != null) {
+			return listener.onAccept(message);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

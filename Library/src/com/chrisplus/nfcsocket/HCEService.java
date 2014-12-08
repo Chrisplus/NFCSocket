@@ -1,4 +1,4 @@
-package com.chrisplus.nfcsocket.socketserver;
+package com.chrisplus.nfcsocket;
 
 import android.content.Intent;
 import android.nfc.cardemulation.MyHostApduService;
@@ -6,8 +6,6 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-
-import com.chrisplus.nfcsocket.NFCSocketServer;
 
 /**
  * This class is Host card Emulator

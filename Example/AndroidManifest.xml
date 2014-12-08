@@ -24,7 +24,7 @@
         </activity>
 
         <service
-            android:name="com.chrisplus.nfcsocket.socketserver.HCEService"
+            android:name="com.chrisplus.nfcsocket.HCEService"
             android:enabled="true"
             android:exported="false" >
         </service>
