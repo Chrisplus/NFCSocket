@@ -127,6 +127,18 @@ public class NfcClientSocket implements ReaderCallback {
 		}
 	}
 
+	public void close() {
+		currentTag = null;
+		if (isoDep != null) {
+			try {
+				isoDep.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			isoDep = null;
+		}
+	}
+
 	@Override
 	public void onTagDiscovered(Tag tag) {
 		currentTag = tag;
