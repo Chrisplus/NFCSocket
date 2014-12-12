@@ -1,10 +1,9 @@
 package com.chrisplus.nfcsocketexample;
 
-import java.io.UnsupportedEncodingException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,16 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.chrisplus.nfcsocket.NFCClientSocket;
-import com.chrisplus.nfcsocket.NFCSocketHelper;
-import com.chrisplus.nfcsocket.NFCSocketServer;
+import com.chrisplus.nfcsocket.NfcClientSocket;
+import com.chrisplus.nfcsocket.NfcServerSocket;
 
-public class MainActivity extends Activity implements
-		NFCSocketServer.NFCSocketServerListener {
+public class MainActivity extends Activity {
 
 	private Button startServer;
 	private Button stopServer;
-	private NFCSocketServer socketServer;
+	private NfcServerSocket socketServer;
 	private Button send;
 	private TextView console;
 	private EditText message;
@@ -45,10 +42,11 @@ public class MainActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				NFCClientSocket.getInstance(getApplicationContext())
-						.unregister(MainActivity.this);
-				socketServer = NFCSocketHelper.instanceNFCSocketServer(context);
-				socketServer.listen(MainActivity.this);
+				NfcClientSocket.getInstance(getApplicationContext())
+						.unregister(clientListener);
+				NfcServerSocket.getInstance(getApplicationContext())
+						.setListener(serverListener);
+				NfcServerSocket.getInstance(getApplicationContext()).listen();
 
 			}
 
@@ -58,9 +56,9 @@ public class MainActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				if (socketServer != null) {
-					socketServer.close();
-				}
+				NfcClientSocket.getInstance(getApplicationContext()).register(
+						clientListener);
+				NfcServerSocket.getInstance(getApplicationContext()).close();
 			}
 
 		});
@@ -69,18 +67,11 @@ public class MainActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-
-				String message = "Hello, world";
-				console.append("Send: " + message + "\n");
-				String response = NFCClientSocket.getInstance(
-						getApplicationContext()).send(message.getBytes());
-
-				if (response != "") {
-					console.append("Receive: " + response + "\n");
-				} else {
-					console.append("Receive: " + response + "\n");
-				}
-
+				int i = NfcClientSocket.getInstance(getApplicationContext())
+						.connect();
+				Log.d("BTR", i + "");
+				NfcClientSocket.getInstance(getApplicationContext()).send(
+						"Hello".getBytes());
 			}
 
 		});
@@ -106,33 +97,46 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public byte[] onAccept(byte[] message) {
-
-		if (message != null) {
-			try {
-				console.append("Receive: " + new String(message, "UTF-8")
-						+ "\n");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			console.append("Receive: " + message + "\n");
-		}
-
-		return "Got it".getBytes();
-	}
-
-	@Override
 	protected void onResume() {
-		NFCClientSocket.getInstance(getApplicationContext()).register(this);
 		super.onResume();
+		NfcClientSocket.getInstance(getApplicationContext()).register(
+				clientListener);
 	}
 
 	@Override
 	protected void onPause() {
-		NFCClientSocket.getInstance(getApplicationContext()).unregister(this);
 		super.onPause();
+		NfcClientSocket.getInstance(getApplicationContext()).unregister(
+				clientListener);
 	}
+
+	private NfcServerSocket.NfcServerSocketListener serverListener = new NfcServerSocket.NfcServerSocketListener() {
+
+		@Override
+		public byte[] onSelectMessage(byte[] message) {
+			Log.d("BTR", "selectMessage");
+			return "welcome".getBytes();
+		}
+
+		@Override
+		public byte[] onMessage(byte[] message) {
+			Log.d("BTR", "normalMessage");
+			return "I know".getBytes();
+		}
+
+	};
+
+	private NfcClientSocket.NfcClientSocketListener clientListener = new NfcClientSocket.NfcClientSocketListener() {
+
+		@Override
+		public void onDiscoveryTag() {
+			Log.d("BTR", "tag!");
+		}
+
+		@Override
+		public Activity getCurrentActivity() {
+			return MainActivity.this;
+		}
+	};
 
 }

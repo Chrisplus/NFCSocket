@@ -24,8 +24,7 @@ public class NfcServerSocket {
 	private Context context;
 	private Messenger coreNfcMessenger;
 	private final Messenger localMessenger = new Messenger(new MsgHandler());
-	private final Intent intent = new Intent(context, HCEService.class);
-
+	private Intent intent;
 	private final ServiceConnection serviceConnection = new ServiceConnection() {
 
 		@Override
@@ -65,12 +64,14 @@ public class NfcServerSocket {
 
 	private NfcServerSocket(Context ctx) {
 		context = ctx;
+		intent = new Intent(context, HCEService.class);
 	}
 
 	public void listen() {
 		if (listener != null) {
 			context.bindService(intent, serviceConnection,
 					Context.BIND_AUTO_CREATE);
+			context.startService(intent);
 		}
 	}
 

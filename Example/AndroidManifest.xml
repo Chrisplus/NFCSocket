@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="16" />
+        android:minSdkVersion="19"
+        android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.NFC" />
 
@@ -27,10 +27,14 @@
 
         <service
             android:name="com.chrisplus.nfcsocket.HCEService"
-            android:exported="false"
+            android:exported="true"
             android:permission="android.permission.BIND_NFC_SERVICE" >
+           <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+            </intent-filter>
+
             <meta-data
-                android:name="android.nfc.cardemulation.my_host_apdu_service"
+                android:name="android.nfc.cardemulation.host_apdu_service"
                 android:resource="@xml/apduservice" />
         </service>
     </application>

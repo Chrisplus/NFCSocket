@@ -59,7 +59,7 @@ public class NfcClientSocket implements ReaderCallback {
 
 	public synchronized void unregister(NfcClientSocketListener ls) {
 		if (ls != null) {
-			if (!listenerSet.contains(ls)) {
+			if (listenerSet.contains(ls)) {
 				listenerSet.remove(ls);
 				disableNfcReaderMode(ls.getCurrentActivity());
 			}
