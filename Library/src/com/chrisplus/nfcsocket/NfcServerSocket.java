@@ -12,6 +12,12 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+/**
+ * This class is used to create and operate NFC server.
+ * 
+ * @author Shiqi Jiang
+ *
+ */
 public class NfcServerSocket {
 
 	public static final String TAG = NfcServerSocket.class.getSimpleName();
@@ -59,6 +65,13 @@ public class NfcServerSocket {
 		}
 	};
 
+	/**
+	 * Get an instance of NfcServerSocket
+	 * 
+	 * @param context
+	 *            The application context.
+	 * @return The instance of NfcServerSocket
+	 */
 	public static NfcServerSocket getInstance(Context context) {
 		if (instance == null) {
 			instance = new NfcServerSocket(context);
@@ -71,6 +84,9 @@ public class NfcServerSocket {
 		intent = new Intent(context, HCEService.class);
 	}
 
+	/**
+	 * Start the Nfc service and listening the coming reader message.
+	 */
 	public void listen() {
 		if (listener != null) {
 			log("start listen");
@@ -80,14 +96,24 @@ public class NfcServerSocket {
 		}
 	}
 
+	/**
+	 * Stop the Nfc service.
+	 */
 	public void close() {
-		
+
 		context.unbindService(serviceConnection);
-		if(context.stopService(intent)){
+		if (context.stopService(intent)) {
 			log("stop nfc service");
 		}
 	}
 
+	/**
+	 * Set a listener which can get callback when the Nfc server gets messages.
+	 * 
+	 * @param lst
+	 *            A {NfcServerSocketListener} used to get the callback when
+	 *            messages come.
+	 */
 	public void setListener(NfcServerSocketListener lst) {
 		if (lst != null) {
 			log("set listener");
@@ -95,7 +121,22 @@ public class NfcServerSocket {
 		}
 	}
 
+	/**
+	 * The interface used to get callback when message comes.
+	 * 
+	 * @author Shiqi Jiang
+	 *
+	 */
 	public interface NfcServerSocketListener {
+		/**
+		 * The callback when the select command is received. The connection will
+		 * NOT be created if null is returned.
+		 * 
+		 * @param message
+		 *            The select message containing AID generally.
+		 * @return You should not return null if you confirm to create a
+		 *         connection with client side.
+		 */
 		public byte[] onSelectMessage(byte[] message);
 
 		public byte[] onMessage(byte[] message);

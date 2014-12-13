@@ -2,6 +2,7 @@ package com.chrisplus.nfcsocket;
 
 import android.app.Service;
 import android.content.Intent;
+import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -10,6 +11,15 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+/**
+ * This class is modified from {@link HostApduService}
+ * 
+ * <li>remove final from onBind method. <li>add refresh message and its
+ * corresponding handle function. <li>add callback onRefreshListener
+ * 
+ * @author Shiqi Jiang
+ *
+ */
 public abstract class CustomHostApduService extends Service {
 	/**
 	 * The {@link Intent} action that must be declared as handled by the
@@ -66,17 +76,26 @@ public abstract class CustomHostApduService extends Service {
 	 */
 	public static final int MSG_DEACTIVATED = 2;
 
+	/**
+	 * MSG_DEACTIVATED is the unhandled message
+	 */
 	public static final int MSG_UNHANDLED = 3;
 
+	/**
+	 * MSG_REFRESH_SERVER is sent by NfcServerSocket when user start listening.
+	 * The messenger of NfcServerSocket will be set in replyto attribute.
+	 */
 	public static final int MSG_REFRESH_SERVER = 4;
 
+	/**
+	 * KEY_DATA is the key of response data in bundle.
+	 */
 	public static final String KEY_DATA = "data";
 
 	/**
 	 * Messenger interface to NfcService for sending responses. Only accessed on
 	 * main thread by the message handler.
 	 *
-	 * @hide
 	 */
 	Messenger mNfcService = null;
 
@@ -151,15 +170,13 @@ public abstract class CustomHostApduService extends Service {
 					Log.e(TAG, "RemoteException calling into NfcService.");
 				}
 				break;
+			/*
+			 * handle upper server messenger refresh. null will be set if server
+			 * will be close.
+			 */
 			case MSG_REFRESH_SERVER:
-				Log.d("Mes", "service refresh listener");
 				onRefreshListener(msg.replyTo);
 				break;
-			/*
-			 * case 6: Log.d("Mes", "service get response");
-			 * sendResponseApdu(msg.getData().getByteArray("res")); Log.d("Mes",
-			 * "service send response"); break;
-			 */
 			default:
 				super.handleMessage(msg);
 			}
@@ -260,5 +277,14 @@ public abstract class CustomHostApduService extends Service {
 	 */
 	public abstract void onDeactivated(int reason);
 
+	/**
+	 * This method will be called in two scenarios: <li>When
+	 * {@link NfcServerSocket} bind with {@link HCEService}, its local messenger
+	 * will be sent. <li> {@link NfcServerSocket} unbind with {@link HCEService},
+	 * null will be sent.
+	 * 
+	 * @param serverMessenger
+	 *            Either local messenger of {@link NfcServerSocket} or null
+	 */
 	public abstract void onRefreshListener(Messenger serverMessenger);
 }
