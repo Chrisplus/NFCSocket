@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.util.Log;
 
 public class NfcServerSocket {
 
@@ -29,6 +30,7 @@ public class NfcServerSocket {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
+			log("hce service connected & send localMessenger");
 			coreNfcMessenger = new Messenger(service);
 			Message msg = Message.obtain(null, HCEService.MSG_REFRESH_SERVER);
 			msg.replyTo = localMessenger;
@@ -41,7 +43,9 @@ public class NfcServerSocket {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
+			log("hce service disconnected");
 			if (coreNfcMessenger != null) {
+				log("send null messenger");
 				Message msg = Message.obtain(null,
 						HCEService.MSG_REFRESH_SERVER);
 				msg.replyTo = null;
@@ -69,6 +73,7 @@ public class NfcServerSocket {
 
 	public void listen() {
 		if (listener != null) {
+			log("start listen");
 			context.bindService(intent, serviceConnection,
 					Context.BIND_AUTO_CREATE);
 			context.startService(intent);
@@ -76,12 +81,16 @@ public class NfcServerSocket {
 	}
 
 	public void close() {
+		
 		context.unbindService(serviceConnection);
-		context.stopService(intent);
+		if(context.stopService(intent)){
+			log("stop nfc service");
+		}
 	}
 
 	public void setListener(NfcServerSocketListener lst) {
 		if (lst != null) {
+			log("set listener");
 			listener = lst;
 		}
 	}
@@ -133,6 +142,10 @@ public class NfcServerSocket {
 			}
 		}
 
+	}
+
+	private void log(String logMessage) {
+		Log.d(TAG, logMessage);
 	}
 
 }

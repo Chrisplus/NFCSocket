@@ -9,6 +9,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.ReaderCallback;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
+import android.util.Log;
 
 public class NfcClientSocket implements ReaderCallback {
 
@@ -50,8 +51,12 @@ public class NfcClientSocket implements ReaderCallback {
 	public synchronized void register(NfcClientSocketListener ls) {
 		if (ls != null) {
 			if (!listenerSet.contains(ls)) {
+				log("register client on "
+						+ ls.getCurrentActivity().getLocalClassName());
 				listenerSet.add(ls);
 				enableNfcReaderMode(ls.getCurrentActivity());
+			} else {
+
 			}
 		}
 
@@ -60,6 +65,8 @@ public class NfcClientSocket implements ReaderCallback {
 	public synchronized void unregister(NfcClientSocketListener ls) {
 		if (ls != null) {
 			if (listenerSet.contains(ls)) {
+				log("unregister client on "
+						+ ls.getCurrentActivity().getLocalClassName());
 				listenerSet.remove(ls);
 				disableNfcReaderMode(ls.getCurrentActivity());
 			}
@@ -76,6 +83,13 @@ public class NfcClientSocket implements ReaderCallback {
 
 	public void setTimeout(int millisecond) {
 
+	}
+
+	public boolean isConnected() {
+		if (currentTag == null || isoDep == null) {
+			return false;
+		}
+		return isoDep.isConnected();
 	}
 
 	public int connect() {
@@ -123,6 +137,7 @@ public class NfcClientSocket implements ReaderCallback {
 				return null;
 			}
 		} else {
+			log("isodep not connected");
 			return null;
 		}
 	}
@@ -174,6 +189,10 @@ public class NfcClientSocket implements ReaderCallback {
 
 	private boolean checkConnectResponse(byte[] data) {
 		return true;
+	}
+
+	private void log(String message) {
+		Log.d(TAG, message);
 	}
 
 }

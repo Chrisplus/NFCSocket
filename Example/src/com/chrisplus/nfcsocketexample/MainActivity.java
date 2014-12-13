@@ -67,11 +67,26 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				int i = NfcClientSocket.getInstance(getApplicationContext())
-						.connect();
-				Log.d("BTR", i + "");
-				NfcClientSocket.getInstance(getApplicationContext()).send(
-						"Hello".getBytes());
+
+				if (!NfcClientSocket.getInstance(getApplicationContext())
+						.isConnected()) {
+					int i = NfcClientSocket
+							.getInstance(getApplicationContext()).connect();
+					Log.d("BTR", i + "");
+
+					if (i == NfcClientSocket.CONNECT_SUCCESS) {
+						byte[] response = NfcClientSocket.getInstance(
+								getApplicationContext()).send(
+								"Hello".getBytes());
+						showLog(response);
+					}
+				} else {
+					byte[] response = NfcClientSocket.getInstance(
+							getApplicationContext()).send("Hello".getBytes());
+					showLog(response);
+				}
+
+				// NfcClientSocket.getInstance(getApplicationContext()).close();
 			}
 
 		});
@@ -138,5 +153,12 @@ public class MainActivity extends Activity {
 			return MainActivity.this;
 		}
 	};
+
+	private void showLog(byte[] res) {
+		if (res != null) {
+			Log.d("BTR", new String(res));
+		}
+
+	}
 
 }
