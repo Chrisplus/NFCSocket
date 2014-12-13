@@ -19,7 +19,6 @@ public class MainActivity extends Activity {
 
 	private Button startServer;
 	private Button stopServer;
-	private NfcServerSocket socketServer;
 	private Button send;
 	private TextView console;
 	private EditText message;
