@@ -18,12 +18,40 @@ public class NfcClientSocket implements ReaderCallback {
 			| NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
 
 	/* Status Code of Connecting */
+
+	/**
+	 * When connecting to Tag successfully
+	 */
 	public static final int CONNECT_SUCCESS = 100;
+
+	/**
+	 * When connecting but no tag found
+	 */
 	public static final int CONNECT_FAIL_NO_TAG = -101;
+
+	/**
+	 * When connecting and tag are found but not {@link IsoDep} instance
+	 */
 	public static final int CONNECT_FAIL_NO_TRANCEIVER = -102;
+
+	/**
+	 * When connecting, send select message but no response is received
+	 */
 	public static final int CONNECT_FAIL_NO_RESPONSE = -103;
+
+	/**
+	 * IO error when connecting
+	 */
 	public static final int CONNECT_FAIL_IO_ERROR = -104;
+
+	/**
+	 * The response message for selecting is not verified.
+	 */
 	public static final int CONNECT_FAIL_WRONG_INFO = -105;
+
+	/**
+	 * Unknown error
+	 */
 	public static final int CONNECT_FAIL_UNKNOWN = -199;
 
 	private static NfcClientSocket instance;
@@ -33,6 +61,13 @@ public class NfcClientSocket implements ReaderCallback {
 	private IsoDep isoDep;
 	private HashSet<NfcClientSocketListener> listenerSet;
 
+	/**
+	 * Get the instance of NfcClientSocket
+	 * 
+	 * @param context
+	 *            The application context
+	 * @return The instance of NfcClientSocket
+	 */
 	public static NfcClientSocket getInstance(Context context) {
 		if (instance == null) {
 			instance = new NfcClientSocket(context);
@@ -48,6 +83,13 @@ public class NfcClientSocket implements ReaderCallback {
 		isoDep = null;
 	}
 
+	/**
+	 * You MUST register before trying to connect.
+	 * 
+	 * @param ls
+	 *            The listener has better to be implemented by your current
+	 *            activity.
+	 */
 	public synchronized void register(NfcClientSocketListener ls) {
 		if (ls != null) {
 			if (!listenerSet.contains(ls)) {
@@ -62,6 +104,13 @@ public class NfcClientSocket implements ReaderCallback {
 
 	}
 
+	/**
+	 * You MUST unregister after closing your client socket
+	 * 
+	 * @param ls
+	 *            The listener has better to be implemented by your current
+	 *            activity.
+	 */
 	public synchronized void unregister(NfcClientSocketListener ls) {
 		if (ls != null) {
 			if (listenerSet.contains(ls)) {
@@ -73,6 +122,12 @@ public class NfcClientSocket implements ReaderCallback {
 		}
 	}
 
+	/**
+	 * Get the number of registered client currently. Generally speaking it
+	 * should be 1
+	 * 
+	 * @return The number of registered client currently
+	 */
 	public int getClientNum() {
 		if (listenerSet != null) {
 			return listenerSet.size();
@@ -81,10 +136,21 @@ public class NfcClientSocket implements ReaderCallback {
 		}
 	}
 
+	/**
+	 * Specified the timeout of waiting for {@link NfcServerClient} response.
+	 * 
+	 * @param millisecond
+	 *            The timeout in millisecond
+	 */
 	public void setTimeout(int millisecond) {
 
 	}
 
+	/**
+	 * Get the connection status
+	 * 
+	 * @return the status True or False
+	 */
 	public boolean isConnected() {
 		if (currentTag == null || isoDep == null) {
 			return false;
@@ -92,6 +158,11 @@ public class NfcClientSocket implements ReaderCallback {
 		return isoDep.isConnected();
 	}
 
+	/**
+	 * Try to connect to {@link NfcServerSocket} and send AID select message
+	 * 
+	 * @return The connection status code.
+	 */
 	public int connect() {
 
 		if (currentTag == null) {
@@ -119,6 +190,16 @@ public class NfcClientSocket implements ReaderCallback {
 
 	}
 
+	/**
+	 * Send message via a Nfc connection.
+	 * 
+	 * @param message
+	 *            The message in byte array form
+	 * @return The response from {@link NfcServerSocket}. null might be returned
+	 *         if <li>the connection is lost. <li> {@link NfcServerSocket} does
+	 *         not return response within timeout. <li> {@link NfcServerSocket}
+	 *         returns a null response.
+	 */
 	public byte[] send(byte[] message) {
 		if (currentTag == null) {
 			return null;
@@ -142,6 +223,9 @@ public class NfcClientSocket implements ReaderCallback {
 		}
 	}
 
+	/**
+	 * Close the current client socket
+	 */
 	public void close() {
 		currentTag = null;
 		if (isoDep != null) {
@@ -168,9 +252,25 @@ public class NfcClientSocket implements ReaderCallback {
 		}
 	}
 
+	/**
+	 * The NfcClientSocketListener should be implemented in the caller activity.
+	 * Registering and unrgistering should be carefully planned.
+	 * 
+	 * @author Shiqi Jiang
+	 *
+	 */
 	public interface NfcClientSocketListener {
+
+		/**
+		 * Get the current activity instance.
+		 * 
+		 * @return The current foreground activity.
+		 */
 		public Activity getCurrentActivity();
 
+		/**
+		 * Get notifications when a tag is found.
+		 */
 		public void onDiscoveryTag();
 
 	}

@@ -21,9 +21,30 @@ import android.util.Log;
 public class NfcServerSocket {
 
 	public static final String TAG = NfcServerSocket.class.getSimpleName();
+
+	/**
+	 * MSG_SERVER_SELECT_MESSAGE is sent by {@link HCEService} when a select
+	 * message is received.
+	 */
 	public static final int MSG_SERVER_SELECT_MESSAGE = 1;
+
+	/**
+	 * MSG_SERVER_NORMAL_MESSAGE is sent by {@link HCEService} when a normal
+	 * message is received.
+	 */
 	public static final int MSG_SERVER_NORMAL_MESSAGE = 2;
+
+	/**
+	 * MSG_SERVER_DEACTIVE is send by {@link HCEService} when deactivate. Two
+	 * possible scenarios making it happened: <li>The NFC link has been
+	 * deactivated or lost <li>A different AID has been selected and was
+	 * resolved to a different service component
+	 */
 	public static final int MSG_SERVER_DEACTIVE = 3;
+
+	/**
+	 * The key of response data in bundle.
+	 */
 	public static final String DATA_KEY = "key";
 
 	private static NfcServerSocket instance;
@@ -128,6 +149,7 @@ public class NfcServerSocket {
 	 *
 	 */
 	public interface NfcServerSocketListener {
+
 		/**
 		 * The callback when the select command is received. The connection will
 		 * NOT be created if null is returned.
@@ -139,6 +161,13 @@ public class NfcServerSocket {
 		 */
 		public byte[] onSelectMessage(byte[] message);
 
+		/**
+		 * The callback when normal command (message) is received.
+		 * 
+		 * @param message
+		 *            The normal message.
+		 * @return The response message. It could be null.
+		 */
 		public byte[] onMessage(byte[] message);
 
 	}
