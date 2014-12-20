@@ -25,17 +25,17 @@ An example is provided in Example folder.
 
 <code>
 	
- <service
-	android:name="com.chrisplus.nfcsocket.HCEService"
-        android:exported="true"
-        android:permission="android.permission.BIND_NFC_SERVICE" >
-        <intent-filter>
-                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
-        </intent-filter>
-        <meta-data
-                android:name="android.nfc.cardemulation.host_apdu_service"
-                android:resource="@xml/apduservice" />
- </service>
+ 	<service
+		android:name="com.chrisplus.nfcsocket.HCEService"
+        	android:exported="true"
+        	android:permission="android.permission.BIND_NFC_SERVICE" >
+        	<intent-filter>
+                	<action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+        	</intent-filter>
+        	<meta-data
+                	android:name="android.nfc.cardemulation.host_apdu_service"
+                	android:resource="@xml/apduservice" />
+ 	</service>
     
 </code>
 
