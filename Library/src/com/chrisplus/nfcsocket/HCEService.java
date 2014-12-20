@@ -13,7 +13,7 @@ public class HCEService extends CustomHostApduService {
 	@Override
 	public byte[] processCommandApdu(byte[] commandApdu, Bundle extras) {
 		if (serverMessenger != null) {
-			if (isSelectAidApdu(commandApdu)) {
+			if (Utils.isSelectAidApdu(commandApdu)) {
 				sendMessage(NfcServerSocket.MSG_SERVER_SELECT_MESSAGE,
 						commandApdu);
 			} else {
@@ -33,11 +33,6 @@ public class HCEService extends CustomHostApduService {
 	@Override
 	public void onRefreshListener(Messenger sMessenger) {
 		serverMessenger = sMessenger;
-	}
-
-	private boolean isSelectAidApdu(byte[] apdu) {
-		return apdu.length >= 2 && apdu[0] == (byte) 0
-				&& apdu[1] == (byte) 0xa4;
 	}
 
 	private void sendMessage(int what, byte[] data) {
