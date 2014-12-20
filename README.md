@@ -25,7 +25,7 @@ An example is provided in Example folder.
 
 <code>
 	
-<service
+ <service
 	android:name="com.chrisplus.nfcsocket.HCEService"
         android:exported="true"
         android:permission="android.permission.BIND_NFC_SERVICE" >
@@ -35,7 +35,7 @@ An example is provided in Example folder.
         <meta-data
                 android:name="android.nfc.cardemulation.host_apdu_service"
                 android:resource="@xml/apduservice" />
-</service>
+ </service>
     
 </code>
 
