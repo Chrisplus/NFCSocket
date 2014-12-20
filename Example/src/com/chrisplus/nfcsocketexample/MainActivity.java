@@ -72,17 +72,22 @@ public class MainActivity extends Activity {
 					int i = NfcClientSocket
 							.getInstance(getApplicationContext()).connect();
 					Log.d("BTR", i + "");
-
 					if (i == NfcClientSocket.CONNECT_SUCCESS) {
+						String tmp = getMessage();
+						appendMessage(false, tmp);
 						byte[] response = NfcClientSocket.getInstance(
 								getApplicationContext()).send(
-								"Hello".getBytes());
+										tmp.getBytes());
 						showLog(response);
+						appendMessage(true, new String(response));
 					}
 				} else {
+					String tmp = getMessage();
+					appendMessage(false, tmp);
 					byte[] response = NfcClientSocket.getInstance(
-							getApplicationContext()).send("Hello".getBytes());
+							getApplicationContext()).send(tmp.getBytes());
 					showLog(response);
+					appendMessage(true, new String(response));
 				}
 
 				// NfcClientSocket.getInstance(getApplicationContext()).close();
@@ -129,12 +134,16 @@ public class MainActivity extends Activity {
 		@Override
 		public byte[] onSelectMessage(byte[] message) {
 			Log.d("BTR", "selectMessage");
+			appendMessage(true, new String(message));
+			appendMessage(false, "welcome");
 			return "welcome".getBytes();
 		}
 
 		@Override
 		public byte[] onMessage(byte[] message) {
 			Log.d("BTR", "normalMessage");
+			appendMessage(true, new String(message));
+			appendMessage(false, "I know");
 			return "I know".getBytes();
 		}
 
@@ -158,6 +167,28 @@ public class MainActivity extends Activity {
 			Log.d("BTR", new String(res));
 		}
 
+	}
+
+	private void appendMessage(boolean isReceive, String message) {
+		if (console != null) {
+			String tmp = "";
+			if (isReceive) {
+				tmp += "Receive: ";
+			} else {
+				tmp += "Send: ";
+			}
+
+			tmp = tmp + message+ "\n";
+			console.append(tmp);
+		}
+	}
+	
+	private String getMessage(){
+		if(message != null && message.getText().length() > 0){
+			return message.getText().toString();
+		}else{
+			return "Hello";
+		}
 	}
 
 }
