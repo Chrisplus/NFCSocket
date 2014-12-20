@@ -43,6 +43,8 @@ An example is provided in Example Folder.
 
 <code>
 	public static byte[] createSelectAidApdu()
+</code>
+<code>
 	public static boolean isSelectAidApdu(byte[] apdu)
 </code>
 
@@ -59,6 +61,8 @@ An example is provided in Example Folder.
 
 <code>
 	NfcClientSocket.getInstance(getApplicationContext()).register(clientListener);
+</code>
+<code>
 	NfcClientSocket.getInstance(getApplicationContext()).unregister(clientListener);
 </code>
 
