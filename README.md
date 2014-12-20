@@ -11,7 +11,7 @@ NfcSocket is a lib for Android developers to implement communication via NFC in 
 
 ## Usage and Sample Code
 
-An example is provided in Example Folder.
+An example is provided in Example folder.
 
 ### Card-Side *plays as Server Socket*
 
@@ -25,34 +25,32 @@ An example is provided in Example Folder.
 
 <code>
 	
-	<service
-            android:name="com.chrisplus.nfcsocket.HCEService"
-            android:exported="true"
-            android:permission="android.permission.BIND_NFC_SERVICE" >
-           <intent-filter>
+<service
+	android:name="com.chrisplus.nfcsocket.HCEService"
+        android:exported="true"
+        android:permission="android.permission.BIND_NFC_SERVICE" >
+        <intent-filter>
                 <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
-            </intent-filter>
-            <meta-data
+        </intent-filter>
+        <meta-data
                 android:name="android.nfc.cardemulation.host_apdu_service"
                 android:resource="@xml/apduservice" />
-    	</service>
+</service>
     
 </code>
 
 * ('xml/apduservice') decalres the AID group. More information about AID group selection can be found in [HostApduService](https://developer.android.com/reference/android/nfc/cardemulation/HostApduService.html). ('xml/apduservice') in ('NfcSocket') provides an example AID group. Note that if using custom AID group, you should override the corresponding methods in ('NfcSocket.Utils')\
 
 <code>
-	public static byte[] createSelectAidApdu()
-</code>
-<code>
-	public static boolean isSelectAidApdu(byte[] apdu)
+public static byte[] createSelectAidApdu()
+public static boolean isSelectAidApdu(byte[] apdu)
 </code>
 
 * To setup Nfc server socket and listen incoming message
 
 <code>
-	NfcServerSocket.getInstance(getApplicationContext()).setListener(serverListener);
-	NfcServerSocket.getInstance(getApplicationContext()).listen();
+NfcServerSocket.getInstance(getApplicationContext()).setListener(serverListener);
+NfcServerSocket.getInstance(getApplicationContext()).listen();
 </code>
 
 ### Reader-Side *plays as Client Socket*
@@ -60,22 +58,20 @@ An example is provided in Example Folder.
 * Register and unregister NfcClientSocket. Before connecting to NfcServerSocket, you should register first and unregister when you do not it any more. Note that your application only can play in one mode: either Server or Client. If NfcServerSocket is running, NfcClientSocket will not work.
 
 <code>
-	NfcClientSocket.getInstance(getApplicationContext()).register(clientListener);
-</code>
-<code>
-	NfcClientSocket.getInstance(getApplicationContext()).unregister(clientListener);
+NfcClientSocket.getInstance(getApplicationContext()).register(clientListener);
+NfcClientSocket.getInstance(getApplicationContext()).unregister(clientListener);
 </code>
 
 * try to connect and the status code will be returned. More information about status code can be found in ('NfcSocket.NfcClientSocket')
 
 <code>
-	int statusCode = NfcClientSocket.getInstance(getApplicationContext()).connect();
+int statusCode = NfcClientSocket.getInstance(getApplicationContext()).connect();
 </code>
 
 * Send Message to Server and wait for response. You are allowed to set the timeout for waiting responses.
 
 <code>
-	byte[] response = NfcClientSocket.getInstance(getApplicationContext()).send(message.getBytes());
+byte[] response = NfcClientSocket.getInstance(getApplicationContext()).send(message.getBytes());
 </code>
 
 ### Others
