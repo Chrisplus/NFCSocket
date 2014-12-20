@@ -24,6 +24,7 @@ An example is provided in Example Folder.
 * declare service in your ('AndroidManifest.xml')
 
 <code>
+	
 	<service
             android:name="com.chrisplus.nfcsocket.HCEService"
             android:exported="true"
@@ -34,7 +35,8 @@ An example is provided in Example Folder.
             <meta-data
                 android:name="android.nfc.cardemulation.host_apdu_service"
                 android:resource="@xml/apduservice" />
-    </service>
+    	</service>
+    
 </code>
 
 * ('xml/apduservice') decalres the AID group. More information about AID group selection can be found in [HostApduService](https://developer.android.com/reference/android/nfc/cardemulation/HostApduService.html). ('xml/apduservice') in ('NfcSocket') provides an example AID group. Note that if using custom AID group, you should override the corresponding methods in ('NfcSocket.Utils')\
