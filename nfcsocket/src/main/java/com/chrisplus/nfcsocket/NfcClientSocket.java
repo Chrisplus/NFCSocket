@@ -138,7 +138,8 @@ public class NfcClientSocket implements ReaderCallback {
     }
 
     /**
-     * Specified the timeout of waiting for {@link NfcServerClient} response.
+     * Specified the timeout of waiting for {@link com.chrisplus.nfcsocket.NfcServerSocket}
+     * response.
      *
      * @param millisecond The timeout in millisecond
      */
