@@ -16,5 +16,8 @@ script: './gradlew clean build'
 
 addons:
   coverity_scan:
+    project:
+        name: "Chrisplus/NFCSocket"
+        description: "Android Play Near Flied Communication in the Socket way"
     build_command: "./gradlew clean build"
     branch_pattern: master
