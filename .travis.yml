@@ -1,0 +1,20 @@
+language: android
+
+android:
+  components:
+  - build-tools-22.0.1
+  - android-19
+
+branches:
+  only:
+    - master
+
+notifications:
+  email: false
+
+script: './gradlew clean build'
+
+addons:
+  coverity_scan:
+    build_command: "./gradlew clean build"
+    branch_pattern: master
