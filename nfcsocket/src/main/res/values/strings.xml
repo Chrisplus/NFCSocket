@@ -1,7 +1,7 @@
 <resources>
 
 	<string name="app_name">NFCSocket</string>
-	<string name="aiddescription">aiddescription</string>
-	<string name="servicedesc">servicedesc</string>
+	<string name="aiddescription">NFCSocket AID</string>
+	<string name="servicedesc">NFCSocket Service</string>
 
 </resources>

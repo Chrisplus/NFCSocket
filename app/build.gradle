@@ -8,8 +8,8 @@ android {
         applicationId "com.chrisplus.nfcsocket"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 150
+        versionName "1.5"
     }
     buildTypes {
         release {
