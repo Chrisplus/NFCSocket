@@ -1,4 +1,4 @@
-NFCSocket
+NFCSocket [![Build Status](https://travis-ci.org/Chrisplus/NFCSocket.svg?branch=master)](https://travis-ci.org/Chrisplus/NFCSocket)
 =========
 
 NfcSocket is a lib for Android developers to implement communication via NFC in an easy way. Based on Host-card-emulator, NfcSocket implements P2P multi-rounds communication. But unlike Android Beam, NfcSocket allows devices communicating automatically without user intervention. NfcSocket also allows developers to handle incoming messages both in the HCE service and their own classes.
@@ -24,7 +24,7 @@ An example is provided in Example folder.
 * declare service in your ('AndroidManifest.xml')
 
 <code>
-	
+
  	<service
 		android:name="com.chrisplus.nfcsocket.HCEService"
         	android:exported="true"
@@ -36,7 +36,7 @@ An example is provided in Example folder.
                 	android:name="android.nfc.cardemulation.host_apdu_service"
                 	android:resource="@xml/apduservice" />
  	</service>
-    
+
 </code>
 
 * ('xml/apduservice') decalres the AID group. More information about AID group selection can be found in [HostApduService](https://developer.android.com/reference/android/nfc/cardemulation/HostApduService.html). ('xml/apduservice') in ('NfcSocket') provides an example AID group. Note that if using custom AID group, you should override the corresponding methods in ('NfcSocket.Utils')\
